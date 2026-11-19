@@ -1,0 +1,36 @@
+---
+import { categoryClass, formatDate, type PostSummary } from '../data/home';
+interface Props { post?: PostSummary; index: number; }
+const { post, index } = Astro.props;
+---
+<li class:list={['post-row', { 'post-row--placeholder': !post }]}>
+  <span class="post-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+  <div class="post-content">
+    {post ? <>
+      <h3><a href={post.href}>{post.title}</a></h3>
+      {post.demo && <span class="tag tag--pink demo-label">演示占位</span>}
+      <p class="post-description">{post.description}</p>
+      <div class="post-meta">{post.pubDate ? <time datetime={post.pubDate.toISOString()}>{formatDate(post.pubDate)}</time> : <span>发布日期待补充</span>}<span class:list={['tag', categoryClass(post.category)]}>{post.category}</span><span>约 {post.readingMinutes} 分钟阅读</span></div>
+    </> : <>
+      <div class="placeholder-heading"><h3>文章标题占位</h3><span class="placeholder-label">待发布</span></div>
+      <p class="post-description">这里将收录文章摘要，让思考与记录慢慢积累。</p>
+      <div class="post-meta"><span>日期待补充</span><span>分类待补充</span><span>阅读时间待补充</span></div>
+    </>}
+  </div>
+  {post && <span class="post-arrow" aria-hidden="true">↗</span>}
+</li>
+<style>
+  .post-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; gap: var(--space-4); padding-block: var(--space-5); border-bottom: var(--border-thin); }
+  .post-number { font-family: var(--font-mono); font-size: var(--text-small); color: var(--color-muted); padding-top: 0.3rem; }
+  h3 { margin-bottom: var(--space-2); font-size: var(--text-post-title); line-height: 1.4; }
+  h3 a { text-decoration: none; }
+  h3 a:hover { text-decoration: underline; }
+  .post-description { margin-bottom: var(--space-3); color: var(--color-muted); font-size: 0.875rem; }
+  .demo-label { margin-bottom: var(--space-3); }
+  .post-arrow { font-size: 1.25rem; }
+  .post-row--placeholder { grid-template-columns: 2rem minmax(0, 1fr); }
+  .post-row--placeholder h3 { font-size: 1.125rem; font-weight: 700; }
+  .placeholder-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+  .placeholder-label { color: var(--color-muted); font-size: 0.75rem; }
+  @media (max-width: 47.999rem) { .post-row, .post-row--placeholder { column-gap: var(--space-3); grid-template-columns: 1.5rem minmax(0, 1fr); } .post-arrow { display: none; } }
+</style>

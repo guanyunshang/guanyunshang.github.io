@@ -1,0 +1,111 @@
+---
+import type { MarkdownHeading } from 'astro';
+interface Props { headings: MarkdownHeading[]; }
+const headings = Astro.props.headings.filter(({ depth }) => depth === 2 || depth === 3);
+---
+<nav class="toc" aria-label="文章目录" data-article-toc>
+  <h2>文章目录</h2>
+  <button class="toc-toggle" type="button" aria-expanded="false" aria-controls="article-toc-list">文章目录<span aria-hidden="true">＋</span></button>
+  {headings.length ? <ol id="article-toc-list">{headings.map((heading) => <li class:list={[`depth-${heading.depth}`]}><a href={`#${heading.slug}`} data-heading-id={heading.slug}>{heading.text}</a></li>)}</ol> : <p class="muted">本文暂无目录。</p>}
+</nav>
+<script>
+  const toc = document.querySelector<HTMLElement>('[data-article-toc]');
+  if (toc) {
+    const links = [...toc.querySelectorAll<HTMLAnchorElement>('a[data-heading-id]')];
+    const headings = links.map((link) => document.getElementById(link.dataset.headingId!)).filter((heading): heading is HTMLElement => heading !== null);
+    const toggle = toc.querySelector<HTMLButtonElement>('.toc-toggle');
+    const sidebar = toc.closest<HTMLElement>('.article-toc');
+    const desktop = window.matchMedia('(min-width: 768px)');
+    toc.dataset.enhanced = '';
+
+    function setOpen(open: boolean) {
+      toc!.dataset.expanded = String(open);
+      toggle?.setAttribute('aria-expanded', String(open));
+    }
+    setOpen(desktop.matches);
+    toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    desktop.addEventListener('change', () => { setOpen(desktop.matches); schedule(); });
+
+    let activeId = '';
+    function activate(id: string) {
+      if (id === activeId) return;
+      activeId = id;
+      links.forEach((link) => {
+        if (link.dataset.headingId === id) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }
+
+    // A tall TOC moves with the document until its bottom is visible; no inner scrollbar.
+    function updateStickyTop() {
+      if (sidebar) sidebar.style.setProperty('--toc-sticky-top', `${Math.min(20, window.innerHeight - sidebar.offsetHeight - 20)}px`);
+    }
+    const sizeObserver = new ResizeObserver(updateStickyTop);
+    sizeObserver.observe(toc);
+    updateStickyTop();
+    window.addEventListener('resize', updateStickyTop);
+
+    function updateActiveSection() {
+      if (!headings.length) return;
+      const readingLine = Math.min(100, window.innerHeight * 0.2);
+      // Keep the current section active through long paragraphs and code blocks.
+      let low = 0;
+      let high = headings.length - 1;
+      let index = 0;
+      while (low <= high) {
+        const middle = Math.floor((low + high) / 2);
+        if (headings[middle].getBoundingClientRect().top <= readingLine) {
+          index = middle;
+          low = middle + 1;
+        } else high = middle - 1;
+      }
+      if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) index = headings.length - 1;
+      activate(headings[index].id);
+    }
+
+    let frame = 0;
+    function schedule() {
+      if (frame) return;
+      frame = requestAnimationFrame(() => { frame = 0; updateActiveSection(); });
+    }
+    const observer = new IntersectionObserver(schedule, {
+      root: null, rootMargin: '-20px 0px -40px 0px', threshold: [0, 1],
+    });
+    headings.forEach((heading) => observer.observe(heading));
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('hashchange', schedule);
+    links.forEach((link) => link.addEventListener('click', () => {
+      if (!desktop.matches) setOpen(false);
+      // Native anchors preserve the URL hash and use CSS smooth scrolling.
+    }));
+    updateActiveSection();
+    window.addEventListener('pagehide', () => {
+      observer.disconnect();
+      sizeObserver.disconnect();
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      window.removeEventListener('resize', updateStickyTop);
+      window.removeEventListener('hashchange', schedule);
+    }, { once: true });
+  }
+</script>
+<style>
+  .toc { --toc-highlight: #a92f45; font-family: var(--font-reading); }
+  h2 { font-family: var(--font-reading); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.03em; margin-bottom: 0.625rem; color: var(--color-muted); }
+  ol { list-style: none; padding: 0; margin: 0; border-left: 1px solid var(--color-rule); }
+  a { display: block; font-family: var(--font-reading); font-size: 0.6875rem; line-height: 1.5; text-decoration: none; padding: 0.25rem 0.625rem; margin-left: -1px; border-left: 1px solid transparent; color: var(--color-muted); }
+  a:hover { color: var(--color-ink); }
+  a[aria-current='location'] { color: var(--toc-highlight); font-weight: 700; border-left-color: var(--toc-highlight); background: color-mix(in srgb, var(--color-pink) 30%, transparent); box-shadow: inset 2px 0 var(--toc-highlight); }
+  .depth-3 a { padding-left: 1.25rem; }
+  .toc-toggle { display: none; }
+  @media (width < 768px) {
+    .toc { padding-block: 0.75rem; border-block: var(--border-thin); }
+    [data-enhanced] h2 { display: none; }
+    [data-enhanced] .toc-toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; border: 0; background: transparent; padding: 0.25rem 0; font-size: 0.75rem; cursor: pointer; }
+    [data-enhanced][data-expanded='false'] ol { display: none; }
+    [data-expanded='true'] .toc-toggle span { transform: rotate(45deg); }
+    ol { margin-top: 0.625rem; }
+  }
+</style>

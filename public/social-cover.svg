@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#F3EEE4"/>
+  <path d="M72 82H1128M72 548H1128" stroke="#171717" stroke-width="2"/>
+  <rect x="74" y="130" width="300" height="42" fill="#F5B6C6"/>
+  <text x="86" y="159" fill="#171717" font-family="Microsoft YaHei, sans-serif" font-size="22">记录思考，探索世界。</text>
+  <text x="68" y="320" fill="#171717" font-family="Impact, Arial Narrow, sans-serif" font-size="112" font-weight="700">GUANYUNSHANG</text>
+  <text x="78" y="394" fill="#171717" font-family="Microsoft YaHei, sans-serif" font-size="30">研究 · 技术 · 学习 · 生活</text>
+  <g transform="translate(850 430) rotate(-5)"><rect width="250" height="60" rx="3" fill="#F0C94D" stroke="#171717" stroke-width="2"/><text x="125" y="40" text-anchor="middle" fill="#171717" font-family="Microsoft YaHei, sans-serif" font-size="27" font-weight="700">保持好奇 ↗</text></g>
+</svg>

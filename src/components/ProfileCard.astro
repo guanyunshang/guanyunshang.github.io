@@ -1,0 +1,32 @@
+---
+import { site } from '../config/site';
+import { profile } from '../data/home';
+---
+<section class="profile-card" aria-labelledby="profile-heading">
+  <div class="profile-portrait">
+    {profile.avatar ? (
+      <img src={profile.avatar} alt={`${site.name} 的头像`} width="160" height="160" loading="lazy" />
+    ) : (
+      <div class="avatar-placeholder" role="img" aria-label="头像占位">
+        <span class="display" aria-hidden="true">G</span>
+        <span class="avatar-caption">头像待补充</span>
+      </div>
+    )}
+  </div>
+  <p class="profile-label">关于我</p>
+  <h2 id="profile-heading" class="display">{site.name}</h2>
+  <p class="profile-introduction">{profile.introduction}</p>
+  <a class="text-link" href="/about">了解更多 <span aria-hidden="true">↗</span></a>
+</section>
+<style>
+  .profile-card { position: relative; }
+  .profile-portrait { padding: var(--space-5); background: var(--color-pink); border: var(--border-ink); border-radius: var(--radius-small); }
+  .profile-portrait::before { content: ''; position: absolute; top: -0.45rem; left: calc(50% - 1.75rem); width: 3.5rem; height: 1rem; background: var(--color-yellow); opacity: 0.65; transform: rotate(-5deg); }
+  .avatar-placeholder { width: 100%; min-height: 10rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .avatar-placeholder > .display { font-size: 5rem; }
+  .avatar-caption { margin-top: var(--space-2); font-size: 0.75rem; }
+  .profile-portrait img { width: 10rem; aspect-ratio: 1; object-fit: cover; margin-inline: auto; }
+  .profile-label { margin-block: var(--space-5) var(--space-2); color: var(--color-muted); font-size: var(--text-small); }
+  h2 { margin-bottom: var(--space-3); font-size: 1.625rem; }
+  .profile-introduction { font-size: 0.875rem; }
+</style>

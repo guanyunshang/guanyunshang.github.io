@@ -22,3 +22,23 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Personal local files
+各文件解释.md
+各文件解释.txt
+
+# 其他环境配置
+.env.*
+!.env.example
+
+# 通用日志
+*.log
+
+# 测试覆盖率及 TypeScript 缓存
+coverage/
+*.tsbuildinfo
+
+# 编辑器临时文件
+*.swp
+*.swo
+*~

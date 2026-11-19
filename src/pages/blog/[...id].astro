@@ -1,0 +1,68 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import CodeCopy from '../../components/CodeCopy.astro';
+import Sticker from '../../components/Sticker.astro';
+import { getBlogPosts, toSummary } from '../../lib/blog';
+import { formatDate } from '../../data/home';
+import '../../styles/article.css';
+
+export async function getStaticPaths() {
+  const entries = await getBlogPosts();
+  return entries.map((entry) => {
+    const group = entries.filter((item) => item.data.demo === entry.data.demo);
+    const index = group.findIndex((item) => item.id === entry.id);
+    return { params: { id: entry.id }, props: {
+      entry,
+      previous: group[index + 1] ? toSummary(group[index + 1]) : undefined,
+      next: group[index - 1] ? toSummary(group[index - 1]) : undefined,
+    } };
+  });
+}
+const { entry, previous, next } = Astro.props;
+const post = toSummary(entry);
+const { Content, headings } = await render(entry);
+---
+<BaseLayout title={post.title} description={post.description} mainClass="article-main" type="article" publishedTime={post.pubDate} image={post.cover}>
+  <article class="blog-article">
+    <header class="article-header">
+      <div class="article-sticker-flank article-sticker-flank--left" aria-hidden="true">
+        <Sticker shape="oval" color="pink" label="慢慢读" note="读 · 想 · 记" motion="sway" />
+        <Sticker shape="stamp" color="orange" label={'认真\n记录'} motion="bounce" />
+      </div>
+      <div class="article-header-copy">
+      <div class="article-kicker"><span class="kicker-rule" aria-hidden="true"></span><span>个人手记</span>{post.demo && <span class="demo-badge">演示占位</span>}<span class="kicker-rule" aria-hidden="true"></span></div>
+      <h1>{post.title}</h1>
+      <p class="article-description">{post.description}</p>
+      <div class="article-meta">
+        {post.pubDate ? <time datetime={post.pubDate.toISOString()}>{formatDate(post.pubDate)}</time> : <span>发布日期待补充</span>}
+        <span class="meta-dot" aria-hidden="true">·</span><span>{post.category}</span><span class="meta-dot" aria-hidden="true">·</span>
+        <span>约 {post.readingMinutes} 分钟阅读</span>
+      </div>
+      {post.demo && <p class="article-demo-note">演示占位文章，用于预览排版，不计入正式文章统计。</p>}
+      </div>
+      <div class="article-sticker-flank article-sticker-flank--right" aria-hidden="true">
+        <Sticker shape="ticket" color="yellow" label="保持好奇" note="随时发现新想法" motion="peel" />
+        <Sticker shape="triangle" color="green" label={'探索\n进行中'} motion="tilt" />
+      </div>
+      {post.cover && <img class="article-cover" src={post.cover} alt={post.title} width="960" height="540" />}
+    </header>
+    <div class="article-reading-layout">
+    <aside class="article-toc"><TableOfContents headings={headings} /></aside>
+    <div class="article-reading-column">
+    <div class="article-prose"><Content /></div>
+    <footer class="article-footer">
+      <div class="article-endnote"><span>阅读至此</span><div class="article-end-stickers" aria-hidden="true"><Sticker shape="ticket" color="orange" label="继续探索 ↗" /><Sticker shape="oval" color="blue" label="记录不止" /></div></div>
+      {entry.data.tags.length > 0 && <div class="article-tags" aria-label="文章标签">{entry.data.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
+      <nav class="adjacent-posts" aria-label="上下篇文章">
+        {previous ? <a href={previous.href} rel="prev"><span>上一篇</span><strong>{previous.title}</strong></a> : <p class="muted">没有上一篇了</p>}
+        {next ? <a href={next.href} rel="next"><span>下一篇</span><strong>{next.title}</strong></a> : <p class="muted">没有下一篇了</p>}
+      </nav>
+      <a class="text-link" href="/archives">返回文章归档 ↗</a>
+    </footer>
+    </div>
+    </div>
+  </article>
+  <CodeCopy />
+</BaseLayout>

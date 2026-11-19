@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --experimental-strip-types --test tests/publication-date.test.mjs",
+    "check:site": "node scripts/validate-site.mjs"
   },
   "dependencies": {
     "astro": "^7.4.12"

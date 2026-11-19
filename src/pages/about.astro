@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { getBlogPosts, getCategories, toSummary } from '../lib/blog';
+import { site } from '../config/site';
+import { profile } from '../data/home';
+import '../styles/listing.css';
+const posts = (await getBlogPosts()).map(toSummary);
+const categories = getCategories(posts);
+---
+<BaseLayout title="关于我" description={site.description}>
+  <header class="listing-header"><p class="eyebrow">GUANYUNSHANG / 关于</p><h1>{site.name}</h1><p>{profile.introduction}</p><span class="listing-stat">已收录 {posts.length} 篇文章 · {categories.length} 个分类</span></header>
+  <div class="about-copy"><h2>关于这个博客</h2><p>这里收录研究、技术、学习与生活中的思考和记录。</p><h2>从第一篇开始</h2>{posts.length ? <p><a href={posts[posts.length - 1].href}>{posts[posts.length - 1].title}</a></p> : <p>新的记录正在准备中。</p>}<div class="about-links"><a href="/archives">翻阅文章归档 ↗</a><a href="/categories">按分类阅读 ↗</a></div></div>
+  <Sidebar slot="sidebar" posts={posts} categories={categories} />
+</BaseLayout>

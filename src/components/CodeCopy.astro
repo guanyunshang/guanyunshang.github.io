@@ -1,0 +1,42 @@
+<script>
+  document.querySelectorAll<HTMLTableElement>('.article-prose table').forEach((table) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'table-scroll';
+    wrapper.tabIndex = 0;
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', '文章表格，可横向滚动');
+    table.before(wrapper);
+    wrapper.append(table);
+  });
+  document.querySelectorAll<HTMLElement>('.article-prose pre').forEach((pre) => {
+    const code = pre.querySelector('code');
+    if (!code) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    pre.before(wrapper);
+    const toolbar = document.createElement('div');
+    toolbar.className = 'code-toolbar';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = '复制代码';
+    button.setAttribute('aria-label', '复制此代码块');
+    const status = document.createElement('span');
+    status.setAttribute('role', 'status');
+    toolbar.append(status, button);
+    wrapper.append(toolbar, pre);
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(code.textContent ?? '');
+        status.textContent = '已复制';
+      } catch {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(code);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+        status.textContent = '请手动复制已选中的代码';
+      }
+      setTimeout(() => { status.textContent = ''; }, 3000);
+    });
+  });
+</script>

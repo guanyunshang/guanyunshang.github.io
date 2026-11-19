@@ -1,0 +1,22 @@
+---
+import { formatDate, type PostSummary } from '../data/home';
+interface Props { posts: PostSummary[]; }
+const { posts } = Astro.props;
+---
+<section class="sidebar-section" aria-labelledby="recent-heading">
+  <h2 id="recent-heading" class="sidebar-heading">最近更新</h2>
+  {posts.length ? (
+    <ul class="recent-list">
+      {posts.slice(0, 5).map((post) => (
+        <li><a href={post.href}>{post.title}</a>{post.demo && <span class="demo-caption">演示占位</span>}{post.pubDate && <time datetime={post.pubDate.toISOString()}>{formatDate(post.pubDate)}</time>}</li>
+      ))}
+    </ul>
+  ) : <p class="sidebar-note muted">暂无文章，新的记录将在这里与你见面。</p>}
+</section>
+<style>
+  .recent-list { list-style: none; padding: 0; margin: 0; }
+  li + li { margin-top: var(--space-4); }
+  li a { font-size: 0.875rem; line-height: 1.6; }
+  time { display: block; margin-top: var(--space-1); font-size: 0.75rem; color: var(--color-muted); }
+  .demo-caption { display: block; font-size: 0.75rem; color: var(--color-muted); }
+</style>

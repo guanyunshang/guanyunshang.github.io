@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { getBlogPosts, getCategories, publicationParts, toSummary } from '../lib/blog';
+import { categoryClass, formatDate, type PostSummary } from '../data/home';
+import '../styles/listing.css';
+const posts = (await getBlogPosts()).map(toSummary);
+const years = new Map<string, Map<string, PostSummary[]>>();
+for (const post of posts) {
+  const { year, month } = publicationParts(post.pubDate!);
+  if (!years.has(year)) years.set(year, new Map());
+  const months = years.get(year)!;
+  if (!months.has(month)) months.set(month, []);
+  months.get(month)!.push(post);
+}
+---
+<BaseLayout title="文章归档" description="按时间收录文章，留下思考与探索的轨迹。">
+  <header class="listing-header"><p class="eyebrow">GUANYUNSHANG / 文章归档</p><h1>文章归档</h1><p>按时间翻阅，留下思考与探索的轨迹。</p><span class="listing-stat">共 {posts.length} 篇文章</span></header>
+  {posts.length ? [...years].map(([year, months]) => <section class="archive-year" aria-label={`${year} 年文章`}><h2>{year}</h2>{[...months].map(([month, entries]) => <section class="archive-month" aria-label={`${Number(month)} 月文章`}><h3>{Number(month)} 月</h3><ol class="archive-list">{entries.map((post) => <li class="archive-row"><time datetime={post.pubDate!.toISOString()}>{formatDate(post.pubDate!)}</time><a href={post.href}>{post.title}</a><span class:list={['tag', categoryClass(post.category)]}>{post.category}</span></li>)}</ol></section>)}</section>) : <p class="muted">暂无已发布文章。</p>}
+  <Sidebar slot="sidebar" posts={posts} categories={getCategories(posts)} />
+</BaseLayout>

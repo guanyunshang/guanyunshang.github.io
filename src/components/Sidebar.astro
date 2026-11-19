@@ -1,0 +1,15 @@
+---
+import ProfileCard from './ProfileCard.astro';
+import Announcement from './Announcement.astro';
+import CategoryList from './CategoryList.astro';
+import RecentPosts from './RecentPosts.astro';
+import type { PostSummary } from '../data/home';
+interface Props { posts: PostSummary[]; categories: { name: string; count: number }[]; }
+const { posts, categories } = Astro.props;
+---
+<div class="sidebar paper-panel">
+  <ProfileCard />
+  <Announcement />
+  <CategoryList categories={categories} />
+  <RecentPosts posts={posts} />
+</div>

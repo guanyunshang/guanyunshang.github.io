@@ -1,0 +1,10 @@
+---
+import { announcement } from '../data/home';
+---
+<section class="sidebar-section" aria-labelledby="announcement-heading">
+  <h2 id="announcement-heading" class="sidebar-heading"><span class="notice-mark" aria-hidden="true"></span>公告</h2>
+  <p class:list={['sidebar-note', { muted: !announcement }]}>{announcement ?? '暂无公告。'}</p>
+</section>
+<style>
+  .notice-mark { display: inline-block; width: 0.5rem; height: 0.5rem; margin-right: var(--space-2); background: var(--color-orange); }
+</style>

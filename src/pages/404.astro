@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="找不到这个页面" description="页面可能已移动，或链接输入有误。" noindex>
+  <section class="not-found">
+    <p class="error-code display" aria-hidden="true">404<span>。</span></p>
+    <h1>这一页，暂时翻不到。</h1>
+    <p class="muted">页面可能已移动，或链接输入有误。回到首页，继续探索吧。</p>
+    <div class="error-links"><a href="/">回到首页 ↗</a><a href="/archives">查看文章归档 ↗</a></div>
+  </section>
+</BaseLayout>
+<style>
+  .not-found { max-width: 40rem; margin: 2rem auto; padding: 2rem 0; }
+  .error-code { font-size: clamp(5rem, 15vw, 8rem); margin-bottom: 1.5rem; }
+  .error-code span { color: var(--color-pink); }
+  h1 { font-family: var(--font-serif); font-weight: 600; font-size: 1.75rem; }
+  .not-found > .muted { font-size: 0.875rem; }
+  .error-links { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; font-size: 0.8125rem; }
+</style>

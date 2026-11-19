@@ -1,0 +1,23 @@
+---
+import PostCard from './PostCard.astro';
+import type { PostSummary } from '../data/home';
+interface Props { posts: PostSummary[]; }
+const { posts } = Astro.props;
+const pageSize = 6;
+---
+<section aria-labelledby="latest-heading">
+  <div class="section-heading"><h2 id="latest-heading">最新文章</h2><span class="section-caption">{posts.length ? (posts.every((post) => post.demo) ? '演示预览' : `共 ${posts.length} 篇`) : '暂无已发布文章'}</span></div>
+  <ol class="post-list">
+    {posts.length ? posts.slice(0, pageSize).map((post, index) => <PostCard post={post} index={index} />) : [0, 1, 2].map((index) => <PostCard index={index} />)}
+  </ol>
+  {posts.length > pageSize && <details class="more-posts">
+    <summary>展开其余 {posts.length - pageSize} 篇文章</summary>
+    <ol class="post-list" start={pageSize + 1}>{posts.slice(pageSize).map((post, index) => <PostCard post={post} index={index + pageSize} />)}</ol>
+  </details>}
+  <a class="archive-link text-link" href="/archives">查看文章归档 <span aria-hidden="true">↗</span></a>
+</section>
+<style>
+  .post-list { list-style: none; padding: 0; margin: 0; }
+  .more-posts summary { padding-block: var(--space-4); cursor: pointer; font-size: 0.875rem; font-weight: 700; }
+  .archive-link { display: inline-block; margin-top: var(--space-5); }
+</style>

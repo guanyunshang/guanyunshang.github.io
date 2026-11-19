@@ -1,0 +1,73 @@
+---
+interface Props {
+  shape: 'oval' | 'stamp' | 'ticket' | 'star' | 'triangle';
+  color: 'pink' | 'orange' | 'yellow' | 'blue' | 'green';
+  label: string;
+  note?: string;
+  motion?: 'sway' | 'bounce' | 'peel' | 'tilt';
+}
+const { shape, color, label, note, motion } = Astro.props;
+const outlines = {
+  oval: 'M7 61C6 30 39 10 88 9C135 8 173 28 174 58C176 88 140 109 92 111C44 112 8 93 7 61Z',
+  stamp: 'M16 12L162 10Q172 10 172 21L170 100Q170 110 160 110L17 108Q8 108 9 98L7 24Q6 13 16 12Z',
+  ticket: 'M9 24L170 22L171 44Q157 47 158 60Q158 72 172 76L172 99L9 100L8 78Q22 75 22 62Q22 49 8 46Z',
+  star: 'M90 5L113 38L155 28L144 69L174 94L129 98L111 116L88 99L49 114L48 80L9 58L52 44L58 8L90 25Z',
+  triangle: 'M82 14Q90 2 99 15L172 100Q180 111 164 112L17 111Q3 112 11 99Z',
+};
+---
+<span class:list={['sticker', `sticker--${shape}`, `sticker--${color}`]} data-motion={motion} aria-hidden="true">
+  <svg viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d={outlines[shape]} fill="var(--sticker-color)" stroke="var(--color-ink)" stroke-width="1.5" stroke-linejoin="round" />
+    <path d={outlines[shape]} transform="translate(9 6) scale(.9)" stroke="var(--color-ink)" stroke-width="1.2" stroke-linejoin="round" />
+    <g stroke="var(--color-ink)" opacity=".18" stroke-width=".7" stroke-linecap="round">
+      <path d="M29 30l6-2m19-7 4 1m69 8 8-1m12 16-4 3M30 88l7 2m16 8 4-2m67-3 7 1m-93-36 3 1m100 22-3 2M74 101l8-1" />
+      <path d="M21 52l2 1m132 14 3-1m-51-43 3 2m-64 45 2-1m83-18 2 1" />
+    </g>
+  </svg>
+  <span class="sticker-label">{label}{note && <small>{note}</small>}</span>
+</span>
+<style>
+  .sticker { --sticker-rotation: -5deg; position: relative; display: inline-block; flex: 0 0 auto; width: 6.25rem; height: 4.25rem; color: var(--color-ink); transform: rotate(var(--sticker-rotation)); }
+  svg { width: 100%; height: 100%; overflow: visible; }
+  .sticker-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--sticker-label-padding, 0.75rem 1rem); font-family: var(--font-heading); font-size: var(--sticker-label-size, 0.8125rem); font-weight: 900; line-height: 1.2; text-align: center; white-space: pre-line; letter-spacing: 0.04em; }
+  small { display: block; margin-top: 0.25rem; font-family: var(--font-mono); font-size: 0.4375rem; font-weight: 400; letter-spacing: 0.12em; }
+  .sticker--pink { --sticker-color: var(--color-pink); }
+  .sticker--orange { --sticker-color: var(--color-orange); }
+  .sticker--yellow { --sticker-color: var(--color-yellow); }
+  .sticker--blue { --sticker-color: var(--color-blue); }
+  .sticker--green { --sticker-color: var(--color-green); }
+  .sticker--stamp { --sticker-rotation: 6deg; width: 4.75rem; height: 4.5rem; }
+  .sticker--ticket { --sticker-rotation: -4deg; width: 6.5rem; height: 3.75rem; }
+  .sticker--star { --sticker-rotation: 9deg; width: 5rem; height: 4.5rem; }
+  .sticker--star .sticker-label { font-size: 0.75rem; padding: 1rem; }
+  .sticker--triangle { --sticker-rotation: -7deg; width: 5.25rem; height: 4.5rem; }
+  .sticker--triangle .sticker-label { padding: var(--sticker-triangle-padding, 1.75rem 1rem 0.75rem); font-size: var(--sticker-label-size, 0.75rem); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .sticker[data-motion] { transition: transform 220ms ease, filter 220ms ease; }
+    .sticker[data-motion='sway']:hover { animation: sticker-sway 700ms ease-in-out both; }
+    .sticker[data-motion='bounce']:hover { animation: sticker-bounce 650ms cubic-bezier(.2,.7,.3,1) both; }
+    .sticker[data-motion='peel']:hover { animation: sticker-peel 600ms ease both; transform-origin: 15% 80%; filter: drop-shadow(2px 4px 2px #17171725); }
+    .sticker[data-motion='tilt']:hover { animation: sticker-tilt 700ms ease-in-out both; }
+  }
+  @keyframes sticker-sway {
+    0%, 100% { transform: rotate(var(--sticker-rotation)); }
+    25% { transform: translateY(-3px) rotate(calc(var(--sticker-rotation) - 9deg)); }
+    65% { transform: translateY(-3px) rotate(calc(var(--sticker-rotation) + 6deg)); }
+    85% { transform: rotate(calc(var(--sticker-rotation) - 3deg)); }
+  }
+  @keyframes sticker-bounce {
+    0%, 100% { transform: rotate(var(--sticker-rotation)); }
+    20% { transform: scale(1.05, .93) rotate(var(--sticker-rotation)); }
+    48% { transform: translateY(-12px) scale(.98, 1.03) rotate(calc(var(--sticker-rotation) - 5deg)); }
+    75% { transform: translateY(1px) scale(1.03, .97) rotate(var(--sticker-rotation)); }
+  }
+  @keyframes sticker-peel {
+    from { transform: perspective(500px) rotate(var(--sticker-rotation)); }
+    to { transform: perspective(500px) translateY(-4px) rotate(var(--sticker-rotation)) rotateY(-18deg) rotateX(8deg); }
+  }
+  @keyframes sticker-tilt {
+    0%, 100% { transform: rotate(var(--sticker-rotation)); }
+    35% { transform: translate(3px, -6px) rotate(calc(var(--sticker-rotation) + 13deg)); }
+    70% { transform: translate(-2px, -2px) rotate(calc(var(--sticker-rotation) - 5deg)); }
+  }
+</style>

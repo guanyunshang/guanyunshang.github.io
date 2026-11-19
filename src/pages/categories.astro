@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import PostCard from '../components/PostCard.astro';
+import { categoryId, getBlogPosts, getCategories, toSummary } from '../lib/blog';
+import { categoryClass } from '../data/home';
+import '../styles/listing.css';
+const posts = (await getBlogPosts()).map(toSummary);
+const categories = getCategories(posts);
+---
+<BaseLayout title="文章分类" description="按主题整理研究、技术、学习与生活的文章。">
+  <header class="listing-header"><p class="eyebrow">GUANYUNSHANG / 文章分类</p><h1>文章分类</h1><p>从主题出发，找到想读的记录。</p><span class="listing-stat">{categories.length} 个分类 · {posts.length} 篇文章</span></header>
+  <nav class="category-index" aria-label="分类索引">{categories.map(({ name, count }) => <a class:list={['tag', categoryClass(name)]} href={`#${encodeURIComponent(categoryId(name))}`}>{name} · {count} 篇</a>)}</nav>
+  {categories.length ? categories.map(({ name, count }) => <section class="category-group" id={categoryId(name)}><h2>{name}<small>{count} 篇</small></h2><ol class="archive-list">{posts.filter((post) => post.category === name).map((post, index) => <PostCard post={post} index={index} />)}</ol></section>) : <p class="muted">暂无文章分类。</p>}
+  <Sidebar slot="sidebar" posts={posts} categories={categories} />
+</BaseLayout>
