@@ -27,47 +27,47 @@ const outlines = {
   <span class="sticker-label">{label}{note && <small>{note}</small>}</span>
 </span>
 <style>
-  .sticker { --sticker-rotation: -5deg; position: relative; display: inline-block; flex: 0 0 auto; width: 6.25rem; height: 4.25rem; color: var(--color-ink); transform: rotate(var(--sticker-rotation)); }
+  .sticker { --sticker-rotation: -5deg; position: relative; display: inline-block; flex: 0 0 auto; width: 7.8125rem; height: 5.3125rem; color: var(--color-ink); transform: rotate(var(--sticker-rotation)); }
   svg { width: 100%; height: 100%; overflow: visible; }
-  .sticker-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--sticker-label-padding, 0.75rem 1rem); font-family: var(--font-heading); font-size: var(--sticker-label-size, 0.8125rem); font-weight: 900; line-height: 1.2; text-align: center; white-space: pre-line; letter-spacing: 0.04em; }
-  small { display: block; margin-top: 0.25rem; font-family: var(--font-mono); font-size: 0.4375rem; font-weight: 400; letter-spacing: 0.12em; }
+  .sticker-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--sticker-label-padding, 0.9375rem 1.25rem); font-family: var(--font-heading); font-size: var(--sticker-label-size, 1.015625rem); font-weight: 900; line-height: 1.2; text-align: center; white-space: pre-line; letter-spacing: 0.04em; }
+  small { display: block; margin-top: 0.3125rem; font-family: var(--font-mono); font-size: 0.546875rem; font-weight: 400; letter-spacing: 0.12em; }
   .sticker--pink { --sticker-color: var(--color-pink); }
   .sticker--orange { --sticker-color: var(--color-orange); }
   .sticker--yellow { --sticker-color: var(--color-yellow); }
   .sticker--blue { --sticker-color: var(--color-blue); }
   .sticker--green { --sticker-color: var(--color-green); }
-  .sticker--stamp { --sticker-rotation: 6deg; width: 4.75rem; height: 4.5rem; }
-  .sticker--ticket { --sticker-rotation: -4deg; width: 6.5rem; height: 3.75rem; }
-  .sticker--star { --sticker-rotation: 9deg; width: 5rem; height: 4.5rem; }
-  .sticker--star .sticker-label { font-size: 0.75rem; padding: 1rem; }
-  .sticker--triangle { --sticker-rotation: -7deg; width: 5.25rem; height: 4.5rem; }
-  .sticker--triangle .sticker-label { padding: var(--sticker-triangle-padding, 1.75rem 1rem 0.75rem); font-size: var(--sticker-label-size, 0.75rem); }
+  .sticker--stamp { --sticker-rotation: 6deg; width: 5.9375rem; height: 5.625rem; }
+  .sticker--ticket { --sticker-rotation: -4deg; width: 8.125rem; height: 4.6875rem; }
+  .sticker--star { --sticker-rotation: 9deg; width: 6.25rem; height: 5.625rem; }
+  .sticker--star .sticker-label { font-size: 0.9375rem; padding: 1.25rem; }
+  .sticker--triangle { --sticker-rotation: -7deg; width: 6.5625rem; height: 5.625rem; }
+  .sticker--triangle .sticker-label { padding: var(--sticker-triangle-padding, 2.1875rem 1.25rem 0.9375rem); font-size: var(--sticker-label-size, 0.9375rem); }
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .sticker[data-motion] { transition: transform 220ms ease, filter 220ms ease; }
     .sticker[data-motion='sway']:hover { animation: sticker-sway 700ms ease-in-out both; }
     .sticker[data-motion='bounce']:hover { animation: sticker-bounce 650ms cubic-bezier(.2,.7,.3,1) both; }
-    .sticker[data-motion='peel']:hover { animation: sticker-peel 600ms ease both; transform-origin: 15% 80%; filter: drop-shadow(2px 4px 2px #17171725); }
+    .sticker[data-motion='peel']:hover { animation: sticker-peel 600ms ease both; transform-origin: 15% 80%; filter: drop-shadow(2.5px 5px 2.5px #17171725); }
     .sticker[data-motion='tilt']:hover { animation: sticker-tilt 700ms ease-in-out both; }
   }
   @keyframes sticker-sway {
     0%, 100% { transform: rotate(var(--sticker-rotation)); }
-    25% { transform: translateY(-3px) rotate(calc(var(--sticker-rotation) - 9deg)); }
-    65% { transform: translateY(-3px) rotate(calc(var(--sticker-rotation) + 6deg)); }
+    25% { transform: translateY(-3.75px) rotate(calc(var(--sticker-rotation) - 9deg)); }
+    65% { transform: translateY(-3.75px) rotate(calc(var(--sticker-rotation) + 6deg)); }
     85% { transform: rotate(calc(var(--sticker-rotation) - 3deg)); }
   }
   @keyframes sticker-bounce {
     0%, 100% { transform: rotate(var(--sticker-rotation)); }
     20% { transform: scale(1.05, .93) rotate(var(--sticker-rotation)); }
-    48% { transform: translateY(-12px) scale(.98, 1.03) rotate(calc(var(--sticker-rotation) - 5deg)); }
-    75% { transform: translateY(1px) scale(1.03, .97) rotate(var(--sticker-rotation)); }
+    48% { transform: translateY(-15px) scale(.98, 1.03) rotate(calc(var(--sticker-rotation) - 5deg)); }
+    75% { transform: translateY(1.25px) scale(1.03, .97) rotate(var(--sticker-rotation)); }
   }
   @keyframes sticker-peel {
-    from { transform: perspective(500px) rotate(var(--sticker-rotation)); }
-    to { transform: perspective(500px) translateY(-4px) rotate(var(--sticker-rotation)) rotateY(-18deg) rotateX(8deg); }
+    from { transform: perspective(625px) rotate(var(--sticker-rotation)); }
+    to { transform: perspective(625px) translateY(-5px) rotate(var(--sticker-rotation)) rotateY(-18deg) rotateX(8deg); }
   }
   @keyframes sticker-tilt {
     0%, 100% { transform: rotate(var(--sticker-rotation)); }
-    35% { transform: translate(3px, -6px) rotate(calc(var(--sticker-rotation) + 13deg)); }
-    70% { transform: translate(-2px, -2px) rotate(calc(var(--sticker-rotation) - 5deg)); }
+    35% { transform: translate(3.75px, -7.5px) rotate(calc(var(--sticker-rotation) + 13deg)); }
+    70% { transform: translate(-2.5px, -2.5px) rotate(calc(var(--sticker-rotation) - 5deg)); }
   }
 </style>

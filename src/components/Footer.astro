@@ -20,12 +20,13 @@ const year = new Date().getFullYear();
 <style>
   .site-footer { background: var(--color-ink); color: var(--color-paper); padding-block: var(--space-7) var(--space-5); }
   .footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-6); padding-bottom: var(--space-7); }
-  .footer-brand { display: inline-block; font-size: 1.5rem; text-decoration: none; margin-bottom: var(--space-3); }
+  .footer-brand { display: inline-block; text-decoration: none; margin-bottom: var(--space-3); font-size: var(--text-brand); }
   .footer-description { max-width: 34ch; margin: 0; font-size: var(--text-small); }
-  .footer-motto { margin: 0; font-family: var(--font-heading); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 900; line-height: 1.4; color: var(--color-pink); }
+  .footer-motto { margin: 0; font-family: var(--font-heading); font-weight: 900; line-height: 1.4; color: var(--color-pink); font-size: var(--text-footer-motto); }
   .footer-motto span { color: var(--color-paper); }
-  .footer-bottom { border-top: 1px solid var(--color-muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-4); font-size: 0.75rem; letter-spacing: 0; }
+  .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-4); letter-spacing: 0; border-top: 1.25px solid var(--color-muted); font-size: var(--text-meta); }
   .site-footer :focus-visible { outline-color: var(--color-pink); }
-  .footer-links { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-links { display: flex; align-items: center; flex-wrap: wrap; gap: 1.25rem; }
   @media (max-width: 47.999rem) { .footer-top { flex-direction: column; } }
+
 </style>

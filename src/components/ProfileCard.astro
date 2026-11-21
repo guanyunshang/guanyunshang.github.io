@@ -21,12 +21,13 @@ import { profile } from '../data/home';
 <style>
   .profile-card { position: relative; }
   .profile-portrait { padding: var(--space-5); background: var(--color-pink); border: var(--border-ink); border-radius: var(--radius-small); }
-  .profile-portrait::before { content: ''; position: absolute; top: -0.45rem; left: calc(50% - 1.75rem); width: 3.5rem; height: 1rem; background: var(--color-yellow); opacity: 0.65; transform: rotate(-5deg); }
-  .avatar-placeholder { width: 100%; min-height: 10rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .avatar-placeholder > .display { font-size: 5rem; }
-  .avatar-caption { margin-top: var(--space-2); font-size: 0.75rem; }
-  .profile-portrait img { width: 10rem; aspect-ratio: 1; object-fit: cover; margin-inline: auto; }
+  .profile-portrait::before { content: ''; position: absolute; background: var(--color-yellow); opacity: 0.65; transform: rotate(-5deg); top: -0.5625rem; left: calc(50% - 2.1875rem); width: 4.375rem; height: 1.25rem; }
+  .avatar-placeholder { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 12.5rem; }
+  .avatar-placeholder > .display { font-size: 6.25rem; }
+  .avatar-caption { margin-top: var(--space-2); font-size: var(--text-meta); }
+  .profile-portrait img { aspect-ratio: 1; object-fit: cover; margin-inline: auto; width: 12.5rem; }
   .profile-label { margin-block: var(--space-5) var(--space-2); color: var(--color-muted); font-size: var(--text-small); }
-  h2 { margin-bottom: var(--space-3); font-size: 1.625rem; }
-  .profile-introduction { font-size: 0.875rem; }
+  h2 { margin-bottom: var(--space-3); font-size: var(--text-brand); }
+  .profile-introduction { font-size: var(--text-summary); }
+
 </style>

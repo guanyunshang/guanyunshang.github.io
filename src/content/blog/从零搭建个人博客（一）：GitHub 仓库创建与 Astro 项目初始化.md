@@ -77,7 +77,7 @@ Astro 不需要单独下载 Windows 安装包，可以通过 npm 调用官方脚
 
 然后使用 Astro 官方脚手架初始化项目。
 
-```powershell
+```
 npm create astro@latest
 ```
 
@@ -87,13 +87,13 @@ npm create astro@latest
 
 项目初始化完成后，进入项目目录：
 
-```powershell
+```
 cd D:\code\personal-blog
 ```
 
 安装项目依赖：
 
-```powershell
+```
 npm install
 ```
 
@@ -101,7 +101,7 @@ npm install
 
 执行：
 
-```powershell
+```
 npm run dev
 ```
 
@@ -154,7 +154,7 @@ Astro 项目创建完成后，需要使用 Git 对项目进行版本管理。
 
 首先进入项目根目录：
 
-```powershell
+```
 cd D:\code\personal-blog
 ```
 
@@ -162,7 +162,7 @@ cd D:\code\personal-blog
 
 执行：
 
-```powershell
+```
 git init
 ```
 
@@ -176,7 +176,7 @@ git init
 
 执行：
 
-```powershell
+```
 git branch -M main
 ```
 
@@ -184,7 +184,7 @@ git branch -M main
 
 可以使用以下命令检查：
 
-```powershell
+```
 git branch
 ```
 
@@ -204,7 +204,7 @@ git branch
 
 执行：
 
-```powershell
+```
 git status
 ```
 
@@ -242,7 +242,7 @@ Untracked files:
 
 执行：
 
-```powershell
+```
 git remote -v
 ```
 
@@ -252,7 +252,7 @@ git remote -v
 
 执行：
 
-```powershell
+```
 git remote add origin https://github.com/guanyunshang/guanyunshang.github.io.git
 ```
 
@@ -267,7 +267,7 @@ git remote add origin https://github.com/guanyunshang/guanyunshang.github.io.git
 
 添加完成后，再次执行：
 
-```powershell
+```
 git remote -v
 ```
 
@@ -290,7 +290,7 @@ origin  https://github.com/guanyunshang/guanyunshang.github.io.git (push)
 
 执行：
 
-```powershell
+```
 git add .
 ```
 
@@ -306,7 +306,7 @@ git add .
 
 执行：
 
-```powershell
+```
 git status
 ```
 
@@ -316,7 +316,7 @@ git status
 
 执行：
 
-```powershell
+```
 git commit -m "Initial Astro project"
 ```
 
@@ -328,7 +328,7 @@ git commit -m "Initial Astro project"
 
 执行：
 
-```powershell
+```
 git push -u origin main
 ```
 
@@ -349,7 +349,7 @@ git push -u origin main
 
 执行：
 
-```powershell
+```
 git push -u origin main
 ```
 
@@ -393,7 +393,7 @@ Git 不允许普通 push 直接覆盖远程已有的独立提交历史，于是�
 
 执行：
 
-```powershell
+```
 git pull origin main --allow-unrelated-histories
 ```
 
@@ -418,7 +418,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 第一步，查看当前状态：
 
-```powershell
+```
 git status
 ```
 
@@ -438,6 +438,52 @@ git status
 
 第三步，标记冲突已经解决：
 
-> 本文后续内容待补充。
+```
+git add README.md
+```
 
+第四步，创建合并提交：
 
+```
+git commit -m "Resolve README merge conflict"
+```
+
+第五步，重新推送：
+
+```
+git push -u origin main
+```
+
+**注意：在合并冲突没有解决、合并提交没有完成之前，不能直接继续普通推送。**
+
+本次处理过程中不应该使用 `git push --force`，因为没有必要覆盖远程仓库的提交历史。
+
+## 八、总结：本次建站的经验
+
+通过这次操作，初步理解了 Git 和 GitHub 的关系，以及本地项目与远程仓库之间的同步机制。
+
+几个核心概念：
+
+| 概念       | 作用                                   |
+| ------------ | ---------------------------------------- |
+| Git        | 分布式版本管理工具                     |
+| GitHub     | 基于 Git 的代码托管平台                |
+| Repository | 仓库，用于保存项目及其版本历史         |
+| Branch     | 分支，用于管理不同开发版本             |
+| main       | 主分支                                 |
+| commit     | 创建一次版本记录                       |
+| remote     | 配置远程仓库                           |
+| origin     | 常用的远程仓库默认名称                 |
+| push       | 将本地提交推送到远程                   |
+| pull       | 拉取远程提交并尝试合并                 |
+| fetch      | 获取远程提交，但不直接合并             |
+| merge      | 合并不同分支或提交历史                 |
+| conflict   | 不同版本之间出现无法自动解决的修改冲突 |
+
+### 最后记住三个原则
+
+1. 如果本地项目已经初始化并提交，创建 GitHub 仓库时最好选择空仓库，避免不必要的历史合并。
+2. Git 可以独立管理本地项目，不需要提前连接 GitHub。
+3. `git push` 失败时，先检查本地和远程提交历史，不要直接使用强制推送。
+
+从创建仓库、初始化项目，到完成本地与远程仓库的连接，这次也算正式迈出了个人博客开发的第一步。

@@ -1,0 +1,169 @@
+<div class="reading-companion" data-reading-companion data-pose="stand">
+  <div class="companion-track">
+    <button class="companion-figure" type="button" aria-label="和阅读小人打个招呼" title="和我打个招呼">
+    <svg class="companion-drawing" viewBox="0 0 44 108" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <g class="companion-body">
+      <g stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+        <g class="companion-head">
+        <path d="M32 17C33 25 29 30 22 30C14 30 10 25 11 18C11 10 16 6 23 7C29 7 33 11 32 17Z" />
+        <path d="M13 12C15 6 23 4 29 10" />
+        <path d="M18 23Q22 26 26 22" stroke-width="1.8" />
+        <g class="companion-eyes" fill="currentColor" stroke="none"><circle cx="18" cy="17" r="1.4" /><circle cx="26" cy="17" r="1.4" /></g>
+        <path class="companion-sleep-eyes" d="M16 17q2 2 4 0m4 0q2 2 4 0" stroke-width="1.5" />
+        </g>
+        <path d="M21 31L22 65" />
+        <path class="companion-arm companion-arm--left" d="M21 41L9 58" />
+        <path class="companion-arm companion-arm--right" d="M22 42L35 57" />
+        <path class="companion-leg companion-leg--left" d="M22 65L11 96L6 97" />
+        <path class="companion-leg companion-leg--right" d="M22 65L33 96L38 97" />
+      </g>
+      </g>
+      <text class="companion-zzz" x="34" y="9" fill="currentColor" font-size="10">z</text>
+    </svg>
+    </button>
+  </div>
+</div>
+<script>
+  const companion = document.querySelector<HTMLElement>('[data-reading-companion]');
+  const prose = document.querySelector<HTMLElement>('.article-prose');
+  const track = companion?.querySelector<HTMLElement>('.companion-track');
+  const figure = companion?.querySelector<HTMLButtonElement>('.companion-figure');
+  if (companion && prose && track && figure) {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let frame = 0;
+    let lastScrollY = window.scrollY;
+    let settleTimer = 0;
+    let sleepTimer = 0;
+    let hopTimer = 0;
+    let hopping = false;
+    const greeting = () => figure!.matches(':hover, :focus-visible');
+    function setPose(pose: string) {
+      companion!.dataset.pose = reducedMotion.matches || !desktop.matches ? 'stand' : pose;
+    }
+    function rest() {
+      window.clearTimeout(sleepTimer);
+      if (hopping) return;
+      setPose(greeting() ? 'wave' : 'stand');
+      if (desktop.matches && !reducedMotion.matches && !greeting() && !document.hidden) {
+        sleepTimer = window.setTimeout(() => setPose('sleep'), 8000);
+      }
+    }
+    function update() {
+      frame = 0;
+      if (!desktop.matches) return;
+      const bounds = prose!.getBoundingClientRect();
+      const distance = Math.max(1, bounds.height - window.innerHeight * 0.4);
+      const progress = Math.min(1, Math.max(0, (window.innerHeight * 0.3 - bounds.top) / distance));
+      const travel = Math.max(0, track!.clientHeight - figure!.getBoundingClientRect().height);
+      figure!.style.transform = `translateY(${(reducedMotion.matches ? 0.5 : progress) * travel}px)`;
+    }
+    function schedule() {
+      if (!frame) frame = requestAnimationFrame(update);
+    }
+    function onScroll() {
+      const delta = window.scrollY - lastScrollY;
+      lastScrollY = window.scrollY;
+      schedule();
+      if (!desktop.matches || reducedMotion.matches || Math.abs(delta) < 0.5) return;
+      window.clearTimeout(sleepTimer);
+      window.clearTimeout(settleTimer);
+      figure!.style.setProperty('--companion-lean', `${Math.max(-8, Math.min(8, delta * -0.15))}deg`);
+      if (!hopping) setPose(greeting() ? 'wave' : 'float');
+      settleTimer = window.setTimeout(() => {
+        figure!.style.setProperty('--companion-lean', '0deg');
+        rest();
+      }, 180);
+    }
+    function greet() {
+      window.clearTimeout(sleepTimer);
+      if (!hopping) setPose('wave');
+    }
+    function hop() {
+      if (!desktop.matches || reducedMotion.matches) return;
+      window.clearTimeout(hopTimer);
+      window.clearTimeout(sleepTimer);
+      hopping = true;
+      // Restart a short greeting on repeated clicks, without changing the scroll position.
+      setPose('stand');
+      void figure!.offsetWidth;
+      setPose('hop');
+      hopTimer = window.setTimeout(() => { hopping = false; rest(); }, 900);
+    }
+    function onPreferenceChange() {
+      window.clearTimeout(settleTimer);
+      window.clearTimeout(hopTimer);
+      hopping = false;
+      figure!.style.setProperty('--companion-lean', '0deg');
+      rest();
+      schedule();
+    }
+    figure.addEventListener('pointerenter', greet);
+    figure.addEventListener('pointerleave', rest);
+    figure.addEventListener('focus', greet);
+    figure.addEventListener('blur', rest);
+    figure.addEventListener('click', hop);
+    const observer = new ResizeObserver(schedule);
+    observer.observe(prose);
+    observer.observe(track);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', schedule);
+    desktop.addEventListener('change', onPreferenceChange);
+    reducedMotion.addEventListener('change', onPreferenceChange);
+    document.addEventListener('visibilitychange', onPreferenceChange);
+    update();
+    rest();
+    window.addEventListener('pagehide', (event) => {
+      if (event.persisted) return;
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      window.clearTimeout(settleTimer);
+      window.clearTimeout(sleepTimer);
+      window.clearTimeout(hopTimer);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', schedule);
+      desktop.removeEventListener('change', onPreferenceChange);
+      reducedMotion.removeEventListener('change', onPreferenceChange);
+      document.removeEventListener('visibilitychange', onPreferenceChange);
+    }, { once: true });
+  }
+</script>
+<style>
+  .reading-companion { position: absolute; inset-block: 0; left: calc(100% + clamp(0.46875rem, 1.25vw, 1.25rem)); width: 3.125rem; pointer-events: none; color: var(--color-blue); }
+  .companion-track { position: sticky; top: 25px; height: calc(100dvh - 50px); max-height: 100%; }
+  .companion-figure { position: relative; display: block; width: calc(3.125rem * 2 / 3); height: calc(7.65625rem * 2 / 3); padding: 0; border: 0; background: transparent; color: inherit; pointer-events: auto; cursor: pointer; border-radius: 1.25rem; }
+  .companion-figure::before { content: ''; position: absolute; inset-block: 0; left: 50%; width: max(100%, 55px); transform: translateX(-50%); }
+  .companion-drawing { width: 100%; height: 100%; overflow: visible; }
+  .companion-body { transform-origin: 22px 65px; }
+  .companion-head { transform-origin: 22px 29px; }
+  .companion-arm { transform-origin: 22px 41px; }
+  .companion-leg { transform-origin: 22px 65px; }
+  .companion-eyes { transform-origin: 22px 17px; }
+  .companion-sleep-eyes, .companion-zzz { opacity: 0; }
+  [data-pose='wave'], [data-pose='hop'] { color: var(--color-orange); }
+  [data-pose='sleep'] { color: var(--color-green); }
+  @media (prefers-reduced-motion: no-preference) {
+    .companion-body { transition: transform 180ms ease-out; }
+    [data-pose='stand'] .companion-eyes { animation: companion-blink 5s infinite; }
+    [data-pose='float'] .companion-body { transform: rotate(var(--companion-lean, 0deg)); }
+    [data-pose='float'] .companion-arm--left { animation: companion-paddle 650ms ease-in-out infinite alternate; }
+    [data-pose='float'] .companion-arm--right { animation: companion-paddle 650ms ease-in-out -650ms infinite alternate-reverse; }
+    [data-pose='float'] .companion-leg--left { animation: companion-step 650ms ease-in-out infinite alternate; }
+    [data-pose='float'] .companion-leg--right { animation: companion-step 650ms ease-in-out infinite alternate-reverse; }
+    [data-pose='wave'] .companion-arm--right, [data-pose='hop'] .companion-arm--right { animation: companion-wave 400ms ease-in-out infinite alternate; }
+    [data-pose='hop'] .companion-body { animation: companion-hop 850ms ease-out both; }
+    [data-pose='sleep'] .companion-head { transform: rotate(14deg); }
+    [data-pose='sleep'] .companion-eyes { opacity: 0; }
+    [data-pose='sleep'] .companion-sleep-eyes { opacity: 1; }
+    [data-pose='sleep'] .companion-body { animation: companion-breathe 3s ease-in-out infinite; }
+    [data-pose='sleep'] .companion-zzz { animation: companion-doze 2.5s ease-out infinite; }
+  }
+  @keyframes companion-blink { 0%, 42%, 46%, 100% { transform: scaleY(1); } 44% { transform: scaleY(0.1); } }
+  @keyframes companion-paddle { from { transform: rotate(-22deg); } to { transform: rotate(22deg); } }
+  @keyframes companion-step { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
+  @keyframes companion-wave { from { transform: rotate(-110deg); } to { transform: rotate(-150deg); } }
+  @keyframes companion-hop { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-11px) rotate(-8deg); } 60% { transform: translateY(0) rotate(5deg); } 80% { transform: translateY(-3px) rotate(-3deg); } }
+  @keyframes companion-breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1.5px); } }
+  @keyframes companion-doze { 0% { opacity: 0; transform: translateY(4px); } 25%, 65% { opacity: 0.8; } 100% { opacity: 0; transform: translateY(-5px); } }
+  @media (width < 1024px) { .reading-companion { display: none; } }
+</style>

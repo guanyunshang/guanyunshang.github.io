@@ -23,10 +23,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Personal local files
-各文件解释.md
-各文件解释.txt
-
 # 其他环境配置
 .env.*
 !.env.example

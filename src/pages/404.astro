@@ -10,10 +10,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </section>
 </BaseLayout>
 <style>
-  .not-found { max-width: 40rem; margin: 2rem auto; padding: 2rem 0; }
-  .error-code { font-size: clamp(5rem, 15vw, 8rem); margin-bottom: 1.5rem; }
+  .not-found { max-width: 50rem; margin: 2.5rem auto; padding: 2.5rem 0; }
+  .error-code { font-size: clamp(6.25rem, 18.75vw, 10rem); margin-bottom: 1.875rem; }
   .error-code span { color: var(--color-pink); }
-  h1 { font-family: var(--font-serif); font-weight: 600; font-size: 1.75rem; }
-  .not-found > .muted { font-size: 0.875rem; }
-  .error-links { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; font-size: 0.8125rem; }
+  h1 { font-family: var(--font-serif); font-weight: 600; font-size: var(--text-page-title); }
+  .not-found > .muted { font-size: var(--text-summary); }
+  .error-links { display: flex; flex-wrap: wrap; gap: 1.875rem; margin-top: 2.5rem; font-size: var(--text-small); }
 </style>

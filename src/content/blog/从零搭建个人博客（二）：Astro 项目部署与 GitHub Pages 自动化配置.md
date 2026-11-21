@@ -479,11 +479,10 @@ GitHub Actions 负责执行自动化任务，GitHub Pages 负责发布网站。
 | 本地 Git 初始化           | 已完成                     |
 | 本地与远程仓库连接        | 已完成                     |
 | Astro site 参数配置       | 已配置                     |
-| 本地构建验证              | 待记录实际结果             |
 | GitHub Actions 工作流创建 | 已创建                     |
 | 工作流推送到 GitHub       | 已完成配置，需核对推送结果 |
 | GitHub Pages Source 配置  | 已选择 GitHub Actions      |
-| Actions 构建与部署成功    | 待验证                     |
-| 线上网站访问              | 待验证                     |
+| Actions 构建与部署成功    | 已完成                     |
+| 线上网站访问              | 已成功                     |
 
 下一阶段：检查 GitHub Actions 执行结果，确认网站是否成功发布，并通过个人博客网址完成线上访问验证。
